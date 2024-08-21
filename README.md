@@ -48,13 +48,12 @@ Choose Online Evaluation (Optional):
 
 You will be asked if you want to perform an online evaluation. If you choose "yes," you will need to provide the following details:
 
-Source column name: The column in the CSV file containing the source text.
-Target column name: The column in the CSV file containing the target or reference text.
-Metric: The evaluation metric you want to use (options include "comprehensiveness," "groundedness," or "relevance").
-API key: Your API key for accessing the external LLM service.
-Save format: The format in which you want to save the results ("csv" or "json").
-Save path: The path where the results should be saved (excluding the file extension).
-Choose Offline Evaluation (Optional):
+ - Source column name: The column in the CSV file containing the source text.
+ - Target column name: The column in the CSV file containing the target or reference text.
+ - Metric: The evaluation metric you want to use (options include "comprehensiveness," "groundedness," or "relevance").
+ - API key: Your API key for accessing the external LLM service.
+ - Save format: The format in which you want to save the results ("csv" or "json").
+ - Save path: The path where the results should be saved (excluding the file extension).
 
 You will also be asked if you want to perform an offline evaluation. If you choose "yes," you will need to provide the following details:
 

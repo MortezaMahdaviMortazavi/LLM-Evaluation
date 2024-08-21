@@ -12,7 +12,7 @@ Online evaluation leverages a Language Learning Model (LLM) to evaluate the qual
 - **Groundedness**: Measures how well the response is supported by the provided source information.
 - **Relevance**: Determines the relevance of the response to the given prompt.
 
-These evaluations are performed using an external LLM service, and the results can be saved in either CSV or JSON format.
+These evaluations are performed using an external LLM service, and the results can be saved in either CSV or JSON format.I also use some of the Trulens prompts for evaluation you can see the main project in the [TruLens](https://github.com/truera/trulens/)
 
 ### Offline Evaluation
 

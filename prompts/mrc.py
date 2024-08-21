@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from textwrap import dedent
 from typing import ClassVar
 
-class MRCBaseEvaluator(ABC):
+class MRCBasePrompt(ABC):
     """
     Abstract base class for all evaluators. Defines the common interface and behavior.
     """
@@ -23,7 +23,7 @@ class MRCBaseEvaluator(ABC):
         pass
 
 
-class AccuracyCompletenessEvaluator(MRCBaseEvaluator):
+class AccuracyCompletenessEvaluator(MRCBasePrompt):
     """
     Evaluator for assessing the accuracy and completeness of model-generated responses.
     """
@@ -80,7 +80,7 @@ class AccuracyCompletenessEvaluator(MRCBaseEvaluator):
 
 
 
-class RelevanceJustificationEvaluator(MRCBaseEvaluator):
+class RelevanceJustificationEvaluator(MRCBasePrompt):
     """
     Evaluator for assessing the relevance and justification of model-generated responses.
     """
@@ -138,7 +138,7 @@ class RelevanceJustificationEvaluator(MRCBaseEvaluator):
 
 
 
-class DepthUnderstandingEvaluator(MRCBaseEvaluator):
+class DepthUnderstandingEvaluator(MRCBasePrompt):
     """
     Evaluator for assessing the depth of understanding demonstrated by model-generated responses.
     """
@@ -195,7 +195,7 @@ class DepthUnderstandingEvaluator(MRCBaseEvaluator):
 
 
 
-class PrecisionConcisenessEvaluator(MRCBaseEvaluator):
+class PrecisionConcisenessEvaluator(MRCBasePrompt):
     """
     Evaluator for assessing the precision and conciseness of model-generated responses.
     """
@@ -254,7 +254,7 @@ class PrecisionConcisenessEvaluator(MRCBaseEvaluator):
 
 
 
-class MRC_ComprehensiveEvaluator(MRCBaseEvaluator):
+class MRC_ComprehensiveEvaluator(MRCBasePrompt):
     """
     Evaluator for comprehensive evaluation of model-generated responses in reading comprehension tasks.
     """

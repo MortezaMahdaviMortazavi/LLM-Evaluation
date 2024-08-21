@@ -1,33 +1,36 @@
-# **Comprehensive Evaluation Tool for Text Generation**
+# Evaluation Script for Online and Offline Metrics
 
-## **Overview**
+## Introduction
 
-This project provides a comprehensive evaluation tool for text generation models. It supports both **online** and **offline** evaluations:
+This repository provides a comprehensive evaluation tool for assessing the quality of generated responses using both **online** and **offline** evaluation methods.
 
-### **Online Evaluation**
-The online evaluation leverages a Large Language Model (LLM) to assess the quality of generated responses based on several metrics, including:
-- **Comprehensiveness**: How well the response covers the required information.
-- **Groundedness**: How well the response is grounded in the source content.
-- **Relevance**: How relevant the response is to the given context or query.
+### Online Evaluation
 
-### **Offline Evaluation**
-The offline evaluation calculates various traditional metrics to assess the performance of text generation models, such as:
-- **ROUGE**: A set of metrics for evaluating automatic summarization and machine translation.
-- **BLEU**: A metric for comparing a candidate text to one or more reference texts.
-- **METEOR**: A metric that includes synonyms, stemming, and paraphrase matching.
-- **BERTScore**: A metric that uses BERT embeddings to measure the similarity between sentences.
-- **F1-Score**: A metric that balances precision and recall in evaluating model outputs.
+Online evaluation leverages a Language Learning Model (LLM) to evaluate the quality of generated responses based on various metrics. These metrics include:
 
-## **Prerequisites**
+- **Comprehensiveness**: Assesses whether the response covers all key points and details provided in the input.
+- **Groundedness**: Measures how well the response is supported by the provided source information.
+- **Relevance**: Determines the relevance of the response to the given prompt.
 
-Before using this tool, ensure you have the following installed:
-- Python 3.8 or higher
-- Necessary Python libraries (`pip install -r requirements.txt`)
-- Access to an API key for the online evaluation (if applicable)
+These evaluations are performed using an external LLM service, and the results can be saved in either CSV or JSON format.
 
-## **Setup**
+### Offline Evaluation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
+Offline evaluation involves the use of traditional NLP metrics to assess the quality of generated responses. These metrics do not rely on an external service and include:
+
+- **ROUGE**: Measures the overlap of n-grams between the generated text and the reference.
+- **BLEU**: Evaluates how many n-grams in the generated text match the reference text.
+- **METEOR**: Considers precision, recall, and synonymy for evaluating text generation quality.
+- **BERTScore**: Uses contextual embeddings from BERT to compare the similarity of generated text and reference text.
+- **F1 Score**: A harmonic mean of precision and recall, typically used for exact match evaluation.
+
+## How to Use the Bash Script
+
+This repository includes a bash script (`run_evaluation.sh`) that facilitates running both online and offline evaluations on a dataset provided in a CSV file.
+
+### Prerequisites
+
+Ensure that you have the necessary Python environment set up with the required dependencies. You can install them using:
+
+```bash
+pip install -r requirements.txt

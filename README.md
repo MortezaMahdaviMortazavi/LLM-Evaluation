@@ -23,6 +23,7 @@ Offline evaluation involves the use of traditional NLP metrics to assess the qua
 - **METEOR**: Considers precision, recall, and synonymy for evaluating text generation quality.
 - **BERTScore**: Uses contextual embeddings from BERT to compare the similarity of generated text and reference text.
 - **F1 Score**: A harmonic mean of precision and recall, typically used for exact match evaluation.
+- **ExactMatch**: Checks if the generated text exactly matches the reference text, ignoring case and leading/trailing spaces, returning 1.0 for a match and 0.0 otherwise
 
 ## How to Use the Bash Script
 

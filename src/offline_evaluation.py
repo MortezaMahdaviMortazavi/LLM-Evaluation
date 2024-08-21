@@ -9,8 +9,6 @@ from abc import ABC, abstractmethod
 from tqdm import tqdm
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from transformers import AutoTokenizer , AutoModel
-from rouge_score import rouge_scorer
-from rouge import Rouge
 from nltk.translate.meteor_score import meteor_score
 
 import warnings

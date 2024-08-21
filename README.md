@@ -1,4 +1,4 @@
-# Evaluation Script for Online and Offline Metrics
+![image](https://github.com/user-attachments/assets/e3767e52-0d7a-4255-b641-4ad754599afd)# Evaluation Script for Online and Offline Metrics
 
 ## Introduction
 
@@ -71,8 +71,5 @@ The script will run the selected evaluations based on your input. If neither onl
 ### Example Usage:
 
 Here's an example of how the script might be used:
-```
-chmod +x run.sh
-./run.sh
-```
+![My Image](![image](https://github.com/user-attachments/assets/52914c04-8563-4ed1-856e-844b1edffdfb))
 Follow the prompts to provide the necessary inputs. The script will execute the evaluations and save the results as specified.

@@ -1,147 +1,100 @@
-import openai
-from abc import ABC, abstractmethod
-from typing import Type, Any
-from prompts import MRCBaseEvaluator, AccuracyCompletenessEvaluator, RelevanceJustificationEvaluator, DepthUnderstandingEvaluator, PrecisionConcisenessEvaluator
+import argparse
+import json
+import requests
 
-class EvaluationFeedbackBase(ABC):
+from prompts import (
+    COT_REASONS_TEMPLATE, GROUNDEDNESS_SYSTEM_PROMPT, 
+    GROUNDEDNESS_USER_PROMPT, 
+    COMPREHENSIVENESS_SYSTEM_PROMPT, 
+    COMPREHENSIVENESS_USER_PROMPT, 
+    PROMPT_RESPONSE_RELEVANCE_SYSTEM_PROMPT, 
+    PROMPT_RESPONSE_RELEVANCE_USER_PROMPT
+)
+
+
+def request_api(prompt, api_key, model='openai/gpt-4o-mini', temperature=1e-5) -> dict:
     """
-    Base class for task evaluation services. It interacts with the OpenAI API
-    and can be extended for specific tasks such as MRC, summarization, translation, etc.
+    Sends a prompt to the GPT model via the OpenRouter API and retrieves the generated response.
     """
-
-    def __init__(self, api_key: str, evaluator: Type[MRCBaseEvaluator]):
-        """
-        Initialize the evaluation service with the API key and evaluator class.
-
-        :param api_key: OpenAI API key for making requests.
-        :param evaluator: An instance of the evaluator class to be used.
-        """
-        self.api_key = api_key
-        self.evaluator = evaluator
-        openai.api_key = self.api_key
-
-    def evaluate_response(self, **kwargs) -> dict:
-        """
-        Evaluate the response using the selected evaluator.
-
-        :param kwargs: The specific inputs required for the evaluation task (e.g., passage, question, model_answer).
-        :return: A dictionary containing the evaluation score and assessment.
-        """
-        prompt = self.generate_prompt(**kwargs)
-        response = self._call_openai_api(prompt)
-        return self._parse_response(response)
-
-    @abstractmethod
-    def generate_prompt(self, **kwargs) -> str:
-        """
-        Generate the prompt based on the specific task and inputs provided.
-        Must be implemented by derived classes.
-
-        :param kwargs: The specific inputs required for the task.
-        :return: The complete prompt string to be sent to the model.
-        """
-        pass
-
-    def _call_openai_api(self, prompt: str) -> str:
-        """
-        Call the OpenAI API with the generated prompt.
-
-        :param prompt: The complete prompt string to send to the API.
-        :return: The raw response from the API.
-        """
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=150,
-            temperature=0.7
-        )
-        return response.choices[0].text.strip()
-
-    def _parse_response(self, response: str) -> dict:
-        """
-        Parse the API response into a structured format.
-
-        :param response: The raw response from the OpenAI API.
-        :return: A dictionary containing the score and assessment.
-        """
-        lines = response.split("\n")
-        score_line = next((line for line in lines if line.startswith("Score:")), None)
-        assessment_line = next((line for line in lines if line.startswith("Assessment:")), None)
-
-        score = int(score_line.split(":")[1].strip()) if score_line else None
-        assessment = assessment_line.split(":")[1].strip() if assessment_line else response
-
-        return {
-            "score": score,
-            "assessment": assessment
-        }
-
-class MRCEvaluationService(EvaluationFeedbackBase):
-    """
-    Evaluation service for MRC (Machine Reading Comprehension) tasks.
-    """
-
-    def generate_prompt(self, passage: str, question: str, model_answer: str) -> str:
-        """
-        Generate the prompt specifically for MRC tasks.
-        """
-        return self.evaluator.generate_prompt(passage, question, model_answer)
-
-class SummarizationEvaluationService(EvaluationFeedbackBase):
-    """
-    Evaluation service for Summarization tasks.
-    """
-
-    def generate_prompt(self, context: str, summary: str) -> str:
-        """
-        Generate the prompt specifically for Summarization tasks.
-        """
-        return self.evaluator.generate_prompt(context=context, summary=summary)
-
-
-class QA_EvaluationService(EvaluationFeedbackBase):
-    """
-    Evaluation service for Question Answering tasks.
-    """
-
-    def generate_prompt(self, context: str, question: str, answer: str) -> str:
-        """
-        Generate the prompt specifically for Question Answering tasks.
-        """
-        raise NotImplementedError("Question Answering evaluation service is not implemented yet.")
-
-class DialogueEvaluationService(EvaluationFeedbackBase):
-    """
-    Evaluation service for Dialogue tasks.
-    """
-
-    def generate_prompt(self, dialogue_history: str, response: str) -> str:
-        """
-        Generate the prompt specifically for Dialogue tasks.
-        """
-        raise NotImplementedError("Dialogue evaluation service is not implemented yet.")
-
-# Example usage:
-if __name__ == "__main__":
-    api_key = "your_openai_api_key"
-    
-    # MRC Evaluation Example
-    accuracy_evaluator = AccuracyCompletenessEvaluator()
-    mrc_service = MRCEvaluationService(api_key=api_key, evaluator=accuracy_evaluator)
-    result = mrc_service.evaluate_response(
-        passage="The Amazon rainforest, often referred to as the lungs of the planet...",
-        question="What role does the Amazon rainforest play in the Earth’s atmosphere?",
-        model_answer="The Amazon rainforest produces 20% of the world’s oxygen."
-    )
-    print("MRC Evaluation Result:", result)
-    
-    # Summarization Evaluation Example (context and summary)
-    summarization_service = SummarizationEvaluationService(api_key=api_key, evaluator=accuracy_evaluator)
     try:
-        result = summarization_service.evaluate_response(
-            context="Summarize the key points about the Amazon rainforest...",
-            summary="The Amazon rainforest produces 20% of the world’s oxygen."
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+            },
+            data=json.dumps({
+                "model": model,
+                "temperature": temperature,
+                "messages": [
+                    {"role": "user", "content": prompt}
+                ]
+            })
         )
-        print("Summarization Evaluation Result:", result)
-    except NotImplementedError as e:
-        print(e)
+
+        response.raise_for_status()
+        response_json = response.json()
+        generated_text = response_json['choices'][0]['message']['content']
+        response_dict = parse_response(generated_text)
+        return response_dict
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
+
+def parse_response(response: str) -> dict:
+    """
+    Parse the API response into a structured format.
+    """
+    import re
+    score_match = re.search(r"Score:\s*(\d+)", response)
+    score = int(score_match.group(1)) if score_match else None
+    assessment_start = response.find("Supporting Evidence:")
+    if assessment_start != -1:
+        assessment = response[assessment_start + len("Supporting Evidence:"):].strip()
+    else:
+        assessment = response.split("Score:")[1].strip() if "Score:" in response else response
+
+    return {
+        "score": score,
+        "supporting_evidence": assessment
+    }
+
+
+
+def generate_prompt(metric, source, target):
+    """
+    Generates a specific prompt for the chosen metric based on provided source and target.
+    """
+    if metric == "comprehensiveness":
+        prompt_template = f"""
+        {COT_REASONS_TEMPLATE}
+        {COMPREHENSIVENESS_SYSTEM_PROMPT}
+        {COMPREHENSIVENESS_USER_PROMPT.format(context=source, target=target)}
+        """
+    elif metric == "groundedness":
+        prompt_template = f"""
+        {COT_REASONS_TEMPLATE}
+        {GROUNDEDNESS_SYSTEM_PROMPT}
+        {GROUNDEDNESS_USER_PROMPT.format(premise=source, hypothesis=target)}
+        """
+    elif metric == "relevance":
+        prompt_template = f"""
+        {COT_REASONS_TEMPLATE}
+        {PROMPT_RESPONSE_RELEVANCE_SYSTEM_PROMPT}
+        {PROMPT_RESPONSE_RELEVANCE_USER_PROMPT.format(prompt=source, response=target)}
+        """
+    else:
+        raise ValueError("Invalid metric provided. Choose from 'comprehensiveness', 'groundedness', or 'relevance'.")
+
+    return prompt_template.strip()
+
+
+def get_feedback(metric:str, source:str, target:str, api_key:str, model:str = 'openai/gpt-4o-mini'):
+    """
+    Generates feedback for a single source and target pair based on the given metric.
+    """
+    prompt_content = generate_prompt(metric, source=source, target=target)
+    result = request_api(prompt_content, api_key, model=model)
+    return result

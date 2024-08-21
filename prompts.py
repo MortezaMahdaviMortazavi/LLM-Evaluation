@@ -20,17 +20,18 @@ COMPREHENSIVENESS_SYSTEM_PROMPT = """
     10 - The target text comprehensively covers all the key points and important details from the context.
 
 """
-COMPREHENSIVENESS_PROMPT_RESPONSE_RELEVANCE_USER_PROontext = """
-    /ENOF CONTEXT/
+COMPREHENSIVENESS_USER_PROMPT = """
+    /CONTEXT/
+    {context}
+    /END OF CONTEXT/
 
     /TARGET TEXT/
-    {summary}
-    /END OF TARGET TEXT
+    {target}
+    /END OF TARGET TEXT/
+
     TEMPLATE:
-    Supporting Evidence: <Provide your reasons for scoring based on the listed criteria step by step. Tie it back to the evaluation being completed.>
     Score: <The score from 0 (the target text misses most key information) to 10 (the target text covers all key information comprehensively).>
 """
-
 
 
 

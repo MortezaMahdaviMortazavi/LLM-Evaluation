@@ -35,12 +35,12 @@ Ensure that you have the necessary Python environment set up with the required d
 
 ```bash
 pip install -r requirements.txt
+```
 
-
-Running the Evaluation Script
+### Running the Evaluation Script
 To run the evaluation script, follow the steps below:
 
-Provide the path to your input CSV file:
+1 - Provide the path to your input CSV file:
 
 The script will prompt you to enter the path to the CSV file containing the dataset you wish to evaluate.
 
@@ -70,8 +70,8 @@ The script will run the selected evaluations based on your input. If neither onl
 Example Usage:
 
 Here's an example of how the script might be used:
-
+```
 bash
-Copy code
 ./run.sh
+```
 Follow the prompts to provide the necessary inputs. The script will execute the evaluations and save the results as specified.

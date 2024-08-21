@@ -51,7 +51,7 @@ if [ "$offline_evaluation" == "yes" ]; then
     read label_column
     echo "Please enter the name of the prediction column:"
     read prediction_column
-    echo "Please enter the metrics to evaluate (e.g., ExactMatch F1Score BLEUScore):"
+    echo "Please enter the metrics to evaluate (e.g., exact_match,f1_score,bert_score,bleu,rouge,meteor):"
     read -a metrics
     echo "Please enter the model name for the tokenizer and metrics (or press enter to use default):"
     read model_name
@@ -63,12 +63,12 @@ fi
 
 # Execute online evaluation if requested
 if [ "$run_online" == true ]; then
-    python online_evaluator.py --data_path $data_path --source_column $source_column --target_column $target_column --metric $metric --api_key $api_key --save_path $online_save_path --save_format $save_format
+    python src/online_evaluation.py --data_path $data_path --source_column $source_column --target_column $target_column --metric $metric --api_key $api_key --save_path $online_save_path --save_format $save_format
 fi
 
 # Execute offline evaluation if requested
 if [ "$run_offline" == true ]; then
-    python offline_evaluator.py --input_csv $data_path --label_column $label_column --prediction_column $prediction_column --logfile $offline_logfile_path --model_name $model_name --metrics "${metrics[@]}"
+    python src/offline_evaluation.py --input_csv $data_path --label_column $label_column --prediction_column $prediction_column --logfile $offline_logfile_path --model_name $model_name --metrics "${metrics[@]}"
 fi
 
 # If neither online nor offline evaluation was selected

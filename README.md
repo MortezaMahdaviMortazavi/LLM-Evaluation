@@ -71,5 +71,5 @@ The script will run the selected evaluations based on your input. If neither onl
 ### Example Usage:
 
 Here's an example of how the script might be used:
-![My Image](![image](https://github.com/user-attachments/assets/52914c04-8563-4ed1-856e-844b1edffdfb))
+![My Image](![image](https://github.com/user-attachments/assets/52914c04-8563-4ed1-856e-844b1edffdfb)
 Follow the prompts to provide the necessary inputs. The script will execute the evaluations and save the results as specified.

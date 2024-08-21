@@ -27,7 +27,7 @@ Offline evaluation involves the use of traditional NLP metrics to assess the qua
 
 ## How to Use the Bash Script
 
-This repository includes a bash script (`run_evaluation.sh`) that facilitates running both online and offline evaluations on a dataset provided in a CSV file.
+This repository includes a bash script (`run.sh`) that facilitates running both online and offline evaluations on a dataset provided in a CSV file.
 
 ### Prerequisites
 
